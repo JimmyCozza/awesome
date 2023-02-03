@@ -333,6 +333,7 @@ function widget.new(args)
         _group_list = {},
         _widget_settings_loaded = false,
         _keygroups = {},
+        _override_label_bgs = false,
     }
     for k, v in pairs(awful.key.keygroups) do
         widget_instance._keygroups[k] = {}
@@ -373,6 +374,8 @@ function widget.new(args)
             beautiful.hotkeys_group_margin or dpi(6)
         self.label_colors = beautiful.xresources.get_current_theme()
         self._widget_settings_loaded = true
+        self._override_label_bgs = args._override_label_bgs or
+            beautiful.hotkeys_override_label_bgs or false
     end
 
 
@@ -507,6 +510,9 @@ function widget.new(args)
 
 
     function widget_instance:_group_label(group, color)
+        if self._override_label_bgs then
+            color = self.label_bg
+        end
         local textbox = wibox.widget.textbox(
             markup.font(self.font,
                 markup.bg(
